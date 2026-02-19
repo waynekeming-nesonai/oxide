@@ -72,11 +72,11 @@ int main(int argc, char* argv[]){
     qputenv("QMLSCENE_DEVICE", "");
     qputenv("QT_QUICK_BACKEND","");
     qputenv("QT_QPA_PLATFORM", "offscreen");
-    // qputenv("QT_QPA_PLATFORM", "vnc:size=1404x1872");
 #else
-    // For non-EPAPER builds (QEMU/i.MX6), use standard Qt platforms
-    // Default to linuxfb for framebuffer output (works on QEMU and i.MX6)
-    qputenv("QT_QPA_PLATFORM", "linuxfb");
+    // For non-EPAPER builds (QEMU/i.MX6):
+    // - QEMU: Use VNC platform for remote display at reMarkable resolution
+    // - i.MX6 hardware: Would use eglfs/linuxfb for GPU/framebuffer
+    qputenv("QT_QPA_PLATFORM", "vnc:size=1404x1872");
 #endif
     QGuiApplication app(argc, argv);
     sentry_init("blight", argv);
