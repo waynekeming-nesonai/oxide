@@ -10,7 +10,7 @@
 #include <memory>
 #include <vector>
 #include <optional>
-#include <libblight_protocol.h>
+#include <libblight_protocol/libblight_protocol.h>
 
 namespace Blight{
     /*!
