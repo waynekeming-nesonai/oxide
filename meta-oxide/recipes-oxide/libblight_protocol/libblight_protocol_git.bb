@@ -25,9 +25,9 @@ do_install:append() {
         mv ${D}/opt/* ${D}${prefix}/ || true
         rmdir ${D}/opt || true
     fi
-    # Install headers that qmake extra targets might miss
+    # Install all headers that qmake extra targets might miss
     install -d ${D}${includedir}/libblight_protocol
-    for header in libblight_protocol.h; do
+    for header in libblight_protocol.h libblight_protocol_global.h socket.h; do
         if [ -f ${S}/$header ]; then
             install -m 0644 ${S}/$header ${D}${includedir}/libblight_protocol/ || true
         fi
