@@ -26,7 +26,8 @@ CONFIG(debug, debug|release){
 }
 
 linux-oe-g++{
-    DEFINES += EPAPER
+    # EPAPER is reMarkable-specific, disabled for i.MX6 builds
+    # DEFINES += EPAPER
 }
 
 QMAKE_RPATHDIR += /lib /usr/lib /opt/lib /opt/usr/lib
