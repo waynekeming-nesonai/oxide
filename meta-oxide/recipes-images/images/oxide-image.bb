@@ -25,9 +25,9 @@ LICENSE = "MIT"
 
 inherit core-image qemuboot
 
-# Set QEMU environment - will use default virt machine for qemuarm
+# Set QEMU environment for qemuarm
 QB_MEM = "-m 512"
-QB_MACHINE = ""
+QB_MACHINE = "-machine virt"
 QB_KERNEL_OPT = "-console tty"
 QB_DTB = ""
 
