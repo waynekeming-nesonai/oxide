@@ -2,6 +2,8 @@
 #include "evdevhandler.h"
 #include "guithread.h"
 
+#include <liboxide/threading.h>
+
 #include <QDBusConnection>
 #include <QDBusUnixFileDescriptor>
 #include <QCoreApplication>

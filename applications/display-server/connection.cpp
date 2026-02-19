@@ -10,13 +10,15 @@
 #include <sys/syscall.h>
 #include <QElapsedTimer>
 #include <QCoreApplication>
+#include <QThread>
 #include <cstring>
 #include <sys/syscall.h>
 #include <unistd.h>
 #include <assert.h>
 
-#ifdef EPAPER
 #include "guithread.h"
+
+#ifdef EPAPER
 #include <mxcfb.h>
 #endif
 #include "surface.h"
@@ -458,7 +460,7 @@ void Connection::readSocket(){
                 );
                 do_ack = false;
 #else
-                surface->move(move.header.x, move.header.y);
+                surface->move(move.x, move.y);
 #endif
                 break;
             }
