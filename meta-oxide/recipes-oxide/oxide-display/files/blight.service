@@ -1,0 +1,12 @@
+[Unit]
+Description=Oxide Display Server
+After=network.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/default/oxide
+ExecStart=/usr/bin/blight
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
