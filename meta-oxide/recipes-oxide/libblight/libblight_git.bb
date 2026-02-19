@@ -8,7 +8,7 @@ SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git/shared/libblight"
 
-DEPENDS = "qtbase libblight_protocol"
+DEPENDS = "qtbase libblight-protocol"
 PV = "1.0+git${SRCPV}"
 
 inherit qmake5 systemd
