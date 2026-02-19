@@ -44,7 +44,8 @@ namespace Oxide {
      * \param callback The code to run on the thread
      * \return Return value of callback
      */
-    template<typename T> LIBOXIDE_EXPORT T dispatchToThread(
+    // Inline template definition - must be here for dispatchToMainThread to work
+    template<typename T> inline T dispatchToThread(
         QThread* thread,
         std::function<T()> callback
     ){

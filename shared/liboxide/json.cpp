@@ -43,7 +43,8 @@ int compare(const QVariant* v1, const QVariant* v2){
         int result;
         const void* v1d = v1->constData();
         const void* v2d = v2->constData();
-        if(QMetaType::compare(v1d, v2d, v1->typeId(), &result)){
+        QMetaType metaType(v1->typeId());
+        if(metaType.compare(v1d, v2d, &result)){
             return result;
         }
     }
@@ -65,15 +66,15 @@ bool operator<(const QVariant& lhs, const QVariant& rhs){
     const QVariant* v1 = &lhs;
     const QVariant* v2 = &rhs;
     if(lhs.typeId() != rhs.typeId()){
-        if (v2->canConvert(v1->typeId())) {
+        if (v2->canConvert(QMetaType(v1->typeId()))) {
             QVariant converted2 = *v2;
-            if (converted2.convert(v1->typeId())){
+            if (converted2.convert(QMetaType(v1->typeId()))){
                 v2 = &converted2;
             }
         }
-        if (v1->typeId() != v2->typeId() && v1->canConvert(v2->typeId())) {
+        if (v1->typeId() != v2->typeId() && v1->canConvert(QMetaType(v2->typeId()))) {
             QVariant converted1 = *v1;
-            if (converted1.convert(v2->typeId())){
+            if (converted1.convert(QMetaType(v2->typeId()))){
                 v1 = &converted1;
             }
         }
