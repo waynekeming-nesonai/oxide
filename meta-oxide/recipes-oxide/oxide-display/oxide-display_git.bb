@@ -11,7 +11,7 @@ SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git/applications/display-server"
 
-DEPENDS = "qtbase qtdeclarative liboxide libblight"
+DEPENDS = "qtbase qtdeclarative liboxide libblight libevdev udev"
 PV = "1.0+git${SRCPV}"
 
 inherit qt6-qmake systemd
