@@ -18,6 +18,11 @@ EXTRA_QMAKEVARS_PRE += "QMAKE_CFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 
 do_install:append() {
+    # Manually install the library since qmake install might not work correctly
+    install -d ${D}${libdir}
+    if [ -f ${B}/lib/libblight.so* ]; then
+        cp -a ${B}/lib/libblight.so* ${D}${libdir}/ || true
+    fi
     # Install headers that qmake extra targets might miss
     install -d ${D}${includedir}/libblight
     for header in clock.h connection.h dbus.h debug.h libblight_global.h libblight.h meta.h socket.h types.h; do
@@ -28,6 +33,11 @@ do_install:append() {
     # Install main header
     echo "#pragma once" > ${D}${includedir}/libblight.h
     echo '#include "libblight/libblight.h"' >> ${D}${includedir}/libblight.h
+    # Install pkgconfig file
+    if [ -f ${B}/lib/pkgconfig/blight.pc ]; then
+        install -d ${D}${libdir}/pkgconfig
+        install -m 0644 ${B}/lib/pkgconfig/blight.pc ${D}${libdir}/pkgconfig/ || true
+    fi
 }
 
 FILES:${PN} = "${libdir}/lib*.so*"
