@@ -8,13 +8,15 @@ SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git/shared/liboxide"
 
-DEPENDS = "qtbase qtdeclarative libblight systemd"
+DEPENDS = "qtbase qtdeclarative libblight-protocol libblight systemd"
 PV = "1.0+git${SRCPV}"
 
 inherit qt6-qmake
 
 # Disable sentry for Yocto builds
 EXTRA_QMAKEVARS_PRE += "CONFIG+=qt FEATURES=-sentry PREFIX=/usr"
+EXTRA_QMAKEVARS_PRE += "QMAKE_CFLAGS+=-I${STAGING_INCDIR}/libblight"
+EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight"
 
 FILES:${PN} = "${libdir}/lib*.so* ${bindir}/* ${datadir}/oxide*"
 FILES:${PN}-dev = "${includedir}/liboxide* ${libdir}/lib*.so ${libdir}/pkgconfig"
