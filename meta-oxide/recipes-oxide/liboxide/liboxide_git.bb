@@ -17,6 +17,8 @@ inherit qt6-qmake
 EXTRA_QMAKEVARS_PRE += "CONFIG+=qt FEATURES=-sentry PREFIX=/usr"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CFLAGS+=-I${STAGING_INCDIR}/libblight"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight"
+EXTRA_QMAKEVARS_PRE += "QMAKE_CFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
+EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 
 FILES:${PN} = "${libdir}/lib*.so* ${bindir}/* ${datadir}/oxide*"
 FILES:${PN}-dev = "${includedir}/liboxide* ${libdir}/lib*.so ${libdir}/pkgconfig"
