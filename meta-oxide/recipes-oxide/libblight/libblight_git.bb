@@ -20,9 +20,12 @@ EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 do_install() {
     # Manual install since qmake install doesn't work correctly with bitbake
     install -d ${D}${libdir}
-    if [ -f ${B}/libblight.so* ]; then
-        cp -a ${B}/libblight.so* ${D}${libdir}/ || true
-    fi
+    # Copy library files if they exist
+    for lib in ${B}/libblight.so*; do
+        if [ -f "$lib" ]; then
+            cp -a "$lib" ${D}${libdir}/ || true
+        fi
+    done
     # Install headers
     install -d ${D}${includedir}/libblight
     for header in clock.h connection.h dbus.h debug.h libblight_global.h libblight.h meta.h socket.h types.h; do
@@ -37,6 +40,10 @@ do_install() {
     if [ -f ${B}/lib/pkgconfig/blight.pc ]; then
         install -d ${D}${libdir}/pkgconfig
         install -m 0644 ${B}/lib/pkgconfig/blight.pc ${D}${libdir}/pkgconfig/ || true
+    fi
+    # Only create directories if we actually installed something
+    if [ ! -f ${D}${libdir}/libblight.so* ]; then
+        rm -rf ${D}${libdir}
     fi
 }
 
