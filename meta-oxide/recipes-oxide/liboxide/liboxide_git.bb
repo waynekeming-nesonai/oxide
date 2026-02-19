@@ -20,7 +20,7 @@ EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 
-do_configure:prepend() {
+do_compile:prepend() {
     # Workaround for qmltyperegistrar not being in the correct location in NXP BSP
     mkdir -p ${RECIPE_SYSROOT_NATIVE}/usr/libexec
     if [ ! -f ${RECIPE_SYSROOT_NATIVE}/usr/libexec/qmltyperegistrar ]; then
