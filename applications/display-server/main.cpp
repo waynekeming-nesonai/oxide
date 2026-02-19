@@ -74,8 +74,9 @@ int main(int argc, char* argv[]){
     qputenv("QT_QPA_PLATFORM", "offscreen");
 #else
     // For non-EPAPER builds (QEMU/i.MX6):
-    // Don't set QT_QPA_PLATFORM - let Qt auto-detect
-    // This allows using QEMU's VNC display or other output
+    // Use linuxfb platform - works with QEMU's VNC display
+    // Note: width x height matches reMarkable resolution
+    qputenv("QT_QPA_PLATFORM", "linuxfb:width=1404:height=1872");
 #endif
     QGuiApplication app(argc, argv);
     sentry_init("blight", argv);
