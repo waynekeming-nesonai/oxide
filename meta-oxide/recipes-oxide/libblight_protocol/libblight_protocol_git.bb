@@ -14,7 +14,7 @@ PN = "libblight-protocol"
 DEPENDS = "qtbase qtbase-native"
 PV = "1.0+git${SRCPV}"
 
-inherit qmake5
+inherit qt6-qmake
 
 EXTRA_QMAKEVARS_PRE += "CONFIG+=qt PREFIX=/usr"
 

@@ -11,7 +11,7 @@ S = "${WORKDIR}/git/shared/qpa"
 DEPENDS = "qtbase liboxide libblight"
 PV = "1.0+git${SRCPV}"
 
-inherit qmake5
+inherit qt6-qmake
 
 # Install to Qt plugin directory
 EXTRA_QMAKEVARS_PRE += "PREFIX=${prefix}"
