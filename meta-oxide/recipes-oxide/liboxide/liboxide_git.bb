@@ -11,7 +11,7 @@ S = "${WORKDIR}/git/shared/liboxide"
 DEPENDS = "qtbase qtdeclarative libblight systemd"
 PV = "1.0+git${SRCPV}"
 
-inherit qmake5
+inherit qt6-qmake
 
 # Disable sentry for Yocto builds
 EXTRA_QMAKEVARS_PRE += "CONFIG+=qt FEATURES=-sentry PREFIX=/usr"
