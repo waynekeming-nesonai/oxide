@@ -99,8 +99,8 @@ namespace Oxide {
 
         QFile file("/sys/devices/soc0/machine");
         if(!file.exists() || !file.open(QIODevice::ReadOnly | QIODevice::Text)){
-            O_DEBUG("Couldn't open " << file.fileName());
-            _deviceType = DeviceType::Unknown;
+            O_DEBUG("Couldn't open " << file.fileName() << ", defaulting to RM1");
+            _deviceType = DeviceType::RM1;  // Default to RM1 for QEMU/non-reMarkable
             return;
         }
         QTextStream in(&file);

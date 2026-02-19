@@ -23,11 +23,11 @@ IMAGE_FEATURES += "splash ssh-server-openssh"
 
 LICENSE = "MIT"
 
-inherit core-image
+inherit core-image qemuboot
 
-# Set QEMU environment
+# Set QEMU environment - will use default virt machine for qemuarm
 QB_MEM = "-m 512"
-QB_MACHINE = "-machine sabrelite"
+QB_MACHINE = ""
 QB_KERNEL_OPT = "-console tty"
 QB_DTB = ""
 

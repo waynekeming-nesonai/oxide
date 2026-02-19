@@ -19,7 +19,8 @@ contains(DEFINES, SENTRY){
     liboxide.depends += cpptrace
 }
 linux-oe-g++{
-    SUBDIRS += epaper
-    liboxide.depends += epaper
+    # EPAPER is reMarkable-specific, disabled for QEMU/i.MX6 builds
+    # SUBDIRS += epaper
+    # liboxide.depends += epaper
 }
 INSTALLS += $$SUBDIRS
