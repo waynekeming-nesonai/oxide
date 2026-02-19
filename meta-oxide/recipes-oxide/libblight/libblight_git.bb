@@ -23,7 +23,7 @@ do_install() {
     # Copy library files if they exist
     for lib in ${B}/libblight.so*; do
         if [ -f "$lib" ]; then
-            cp -a "$lib" ${D}${libdir}/ || true
+            install -m 0755 "$lib" ${D}${libdir}/ || true
         fi
     done
     # Install headers
@@ -40,10 +40,6 @@ do_install() {
     if [ -f ${B}/lib/pkgconfig/blight.pc ]; then
         install -d ${D}${libdir}/pkgconfig
         install -m 0644 ${B}/lib/pkgconfig/blight.pc ${D}${libdir}/pkgconfig/ || true
-    fi
-    # Only create directories if we actually installed something
-    if [ ! -f ${D}${libdir}/libblight.so* ]; then
-        rm -rf ${D}${libdir}
     fi
 }
 
