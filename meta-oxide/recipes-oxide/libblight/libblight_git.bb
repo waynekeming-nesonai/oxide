@@ -11,7 +11,7 @@ S = "${WORKDIR}/git/shared/libblight"
 DEPENDS = "qtbase libblight_protocol"
 PV = "1.0+git${SRCPV}"
 
-inherit qt6-qmake systemd
+inherit qmake5 systemd
 
 EXTRA_QMAKEVARS_PRE += "CONFIG+=qt PREFIX=/usr"
 

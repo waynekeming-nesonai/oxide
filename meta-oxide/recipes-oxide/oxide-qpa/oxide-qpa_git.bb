@@ -11,10 +11,10 @@ S = "${WORKDIR}/git/shared/qpa"
 DEPENDS = "qtbase liboxide libblight"
 PV = "1.0+git${SRCPV}"
 
-inherit qt6-qmake
+inherit qmake5
 
 # Install to Qt plugin directory
 EXTRA_QMAKEVARS_PRE += "PREFIX=${prefix}"
 
-FILES:${PN} = "${libdir}/qt6/plugins/platforms/liboxide.so*"
-FILES:${PN}-dev = "${libdir}/qt6/plugins/platforms/*.la"
+FILES:${PN} = "${libdir}/qt5/plugins/platforms/liboxide.so*"
+FILES:${PN}-dev = "${libdir}/qt5/plugins/platforms/*.la"

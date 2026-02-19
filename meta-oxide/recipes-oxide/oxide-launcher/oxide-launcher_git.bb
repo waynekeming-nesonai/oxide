@@ -11,7 +11,7 @@ S = "${WORKDIR}/git/applications/launcher"
 DEPENDS = "qtbase qtdeclarative liboxide"
 PV = "1.0+git${SRCPV}"
 
-inherit qt6-qmake
+inherit qmake5
 
 EXTRA_QMAKEVARS_PRE += "PREFIX=/usr"
 

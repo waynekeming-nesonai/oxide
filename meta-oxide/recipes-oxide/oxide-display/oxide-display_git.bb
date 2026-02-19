@@ -14,7 +14,7 @@ S = "${WORKDIR}/git/applications/display-server"
 DEPENDS = "qtbase qtdeclarative liboxide libblight"
 PV = "1.0+git${SRCPV}"
 
-inherit qt6-qmake systemd
+inherit qmake5 systemd
 
 EXTRA_QMAKEVARS_PRE += "CONFIG+=qt FEATURES=-sentry PREFIX=/usr"
 
