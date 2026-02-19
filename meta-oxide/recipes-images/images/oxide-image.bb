@@ -15,6 +15,10 @@ IMAGE_INSTALL = "\
     gdb \
 "
 
+# Temporarily exclude oxide-qpa from build due to complex Qt5→Qt6 API migration
+# The QPA plugin requires significant refactoring for Qt6 compatibility
+IMAGE_INSTALL:remove = "oxide-qpa"
+
 IMAGE_FEATURES += "splash ssh-server-openssh"
 
 LICENSE = "MIT"
