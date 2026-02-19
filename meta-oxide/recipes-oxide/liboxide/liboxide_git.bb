@@ -19,9 +19,8 @@ EXTRA_QMAKEVARS_PRE += "QMAKE_CFLAGS+=-I${STAGING_INCDIR}/libblight"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
-EXTRA_QMAKEVARS_PRE += "CONFIG+=no_qml_types"
 
-do_compile:prepend() {
+do_compile() {
     # Workaround for qmltyperegistrar not being in the correct location in NXP BSP
     mkdir -p ${RECIPE_SYSROOT_NATIVE}/usr/libexec
     if [ ! -f ${RECIPE_SYSROOT_NATIVE}/usr/libexec/qmltyperegistrar ]; then
@@ -34,6 +33,7 @@ do_compile:prepend() {
             fi
         done
     fi
+    qt6_qmake_compile
 }
 
 FILES:${PN} = "${libdir}/lib*.so* ${bindir}/* ${datadir}/oxide*"
