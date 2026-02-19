@@ -98,11 +98,8 @@ Compositor* getCompositorDBus(){
     static auto compositor = new Compositor(
         BLIGHT_SERVICE,
         "/",
-#ifdef EPAPER
+        // blight runs on system bus
         QDBusConnection::systemBus(),
-#else
-        QDBusConnection::sessionBus(),
-#endif
         qApp
     );
     return compositor;

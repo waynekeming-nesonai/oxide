@@ -36,11 +36,8 @@ DbusInterface::DbusInterface(QObject* parent)
 #endif
     // Needed to trick QtDBus into exposing the object
     setProperty("__init__", true);
-#ifdef EPAPER
+    // blight is a system service, always use system bus
     auto bus = QDBusConnection::systemBus();
-#else
-    auto bus = QDBusConnection::sessionBus();
-#endif
     if(!bus.isConnected()){
         qFatal("Failed to connect to system bus.");
     }
