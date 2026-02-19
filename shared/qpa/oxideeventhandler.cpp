@@ -118,8 +118,13 @@ typedef struct TouchData {
     {}
     ~TouchData(){
         if(device != nullptr){
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            // In Qt6, touch devices don't need to be unregistered
+            delete device;
+#else
             QWindowSystemInterface::unregisterTouchDevice(device);
             delete device;
+#endif
         }
     }
 } TouchData;
@@ -199,16 +204,26 @@ DeviceData::DeviceData(unsigned int device, QInputDeviceManager::DeviceType type
                 touchData->maxPressure = absInfo.maximum;
             }
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-            auto touchDevice = new QPointingDevice;
-            touchDevice->setName(hw_name);
-            touchDevice->setType(QPointingDevice::PointerType::TouchScreen);
-            touchDevice->setCapabilities(QPointingDevice::Capability::Position | QPointingDevice::Capability::Area);
+            QPointingDevice* touchDevice;
+            // Build capabilities flags
+            QPointingDevice::Capabilities caps = QPointingDevice::Capability::Position | QPointingDevice::Capability::Area;
             if(touchData->maxPressure > touchData->minPressure){
-                touchDevice->setCapabilities(touchDevice->capabilities() | QPointingDevice::Capability::Pressure);
+                caps |= QPointingDevice::Capability::Pressure;
             }
+            int maxTouchPoints = 1;
             if(ioctl(fd, EVIOCGABS(ABS_MT_SLOT), &absInfo)){
-                touchDevice->setMaximumTouchPoints(absInfo.maximum);
+                maxTouchPoints = absInfo.maximum;
             }
+            // Create device with all properties at once (Qt6 API)
+            touchDevice = QPointingDevice::create(
+                QInputDeviceIdentifier::fromName(hw_name),
+                QInputDevice::IdentifierType::BusType::Evdev,
+                0,  // id
+                QPointingDevice::DeviceType::TouchScreen,
+                caps,
+                maxTouchPoints,
+                QString()  // seatName
+            );
 #else
             auto touchDevice = new QTouchDevice;
             touchDevice->setName(hw_name);
@@ -222,7 +237,9 @@ DeviceData::DeviceData(unsigned int device, QInputDeviceManager::DeviceType type
             }
 #endif
             touchData->device = touchDevice;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             QWindowSystemInterface::registerTouchDevice(touchDevice);
+#endif
             break;
         }
         case QInputDeviceManager::DeviceTypePointer:
@@ -620,21 +637,37 @@ void OxideEventHandler::processTabletEvent(
                 tabletData->state.down = event->value != 0;
                 break;
             case BTN_TOOL_PEN:
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+                tabletData->state.tool = event->value ? int(QInputDevice::PointerType::Pen) : 0;
+#else
                 tabletData->state.tool = event->value ? QTabletEvent::Pen : 0;
+#endif
                 break;
             case BTN_TOOL_RUBBER:
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+                tabletData->state.tool = event->value ? int(QInputDevice::PointerType::Eraser) : 0;
+#else
                 tabletData->state.tool = event->value ? QTabletEvent::Eraser : 0;
+#endif
                 break;
             default:
                 break;
         }
     }else if(event->type == EV_SYN && event->code == SYN_REPORT && tabletData->lastEventType != event->type){
         if(!tabletData->state.lastReportTool && tabletData->state.tool){
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            QWindowSystemInterface::handleTabletEnterProximityEvent(
+                QInputDevice::PointerType::Stylus,
+                tabletData->state.tool,
+                device
+            );
+#else
             QWindowSystemInterface::handleTabletEnterProximityEvent(
                 QTabletEvent::Stylus,
                 tabletData->state.tool,
                 device
             );
+#endif
         }
         qreal nx = (tabletData->state.x - tabletData->minValues.x) / qreal(tabletData->maxValues.x - tabletData->minValues.x);
         qreal ny = (tabletData->state.y - tabletData->minValues.y) / qreal(tabletData->maxValues.y - tabletData->minValues.y);
@@ -653,6 +686,24 @@ void OxideEventHandler::processTabletEvent(
             : qreal(1);
         if(tabletData->state.down || tabletData->state.lastReportDown){
             auto button = tabletData->state.down ? Qt::LeftButton : Qt::NoButton;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            QWindowSystemInterface::handleTabletEvent(
+                nullptr,
+                QPointF(),
+                globalPos,
+                QInputDevice::PointerType::Stylus,
+                pointer,
+                button,
+                pressure,
+                0,
+                0,
+                0,
+                0,
+                0,
+                device,
+                qGuiApp->keyboardModifiers()
+            );
+#else
             QWindowSystemInterface::handleTabletEvent(
                 nullptr,
                 QPointF(),
@@ -669,13 +720,22 @@ void OxideEventHandler::processTabletEvent(
                 device,
                 qGuiApp->keyboardModifiers()
             );
+#endif
         }
         if(tabletData->state.lastReportTool && !tabletData->state.tool){
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            QWindowSystemInterface::handleTabletLeaveProximityEvent(
+                QInputDevice::PointerType::Stylus,
+                tabletData->state.tool,
+                device
+            );
+#else
             QWindowSystemInterface::handleTabletLeaveProximityEvent(
                 QTabletEvent::Stylus,
                 tabletData->state.tool,
                 device
             );
+#endif
         }
         tabletData->state.lastReportDown = tabletData->state.down;
         tabletData->state.lastReportTool = tabletData->state.tool;
@@ -687,9 +747,25 @@ void OxideEventHandler::processTabletEvent(
 void addTouchPoint(QTransform rotate, TouchData* touchData, const Contact& contact, Qt::TouchPointStates* combinedStates){
     QWindowSystemInterface::TouchPoint tp;
     tp.id = contact.trackingId;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // Qt6: state is QEventPoint::State, flags don't exist
+    tp.state = QEventPoint::State::Unknown;
+    // Try to map Qt5 state to Qt6 state
+    if(contact.state & Qt::TouchPointPressed){
+        tp.state = QEventPoint::State::Pressed;
+    }else if(contact.state & Qt::TouchPointReleased){
+        tp.state = QEventPoint::State::Released;
+    }else if(contact.state & Qt::TouchPointMoved){
+        tp.state = QEventPoint::State::Updated;
+    }else if(contact.state & Qt::TouchPointStationary){
+        tp.state = QEventPoint::State::Stationary;
+    }
+    *combinedStates |= static_cast<Qt::TouchPointStates>(static_cast<int>(tp.state));
+#else
     tp.flags = contact.flags;
     tp.state = contact.state;
     *combinedStates |= tp.state;
+#endif
 
     // Store the HW coordinates for now, will be updated later.
     tp.area = QRectF(0, 0, contact.maj, contact.maj);
