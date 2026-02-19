@@ -82,7 +82,7 @@ namespace Oxide{
         for(int i = 0; i < parameters.length(); i++){
             auto typeId = QMetaType::fromName(parameters[i].toStdString().c_str()).id();
             void* ptr = reinterpret_cast<void*>(arguments[i + 1]);
-            args << QVariant(typeId, ptr);
+            args << QVariant(QMetaType(typeId), ptr);
         }
         onMessage(args);
         if(once){
