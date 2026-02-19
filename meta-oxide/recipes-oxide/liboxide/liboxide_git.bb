@@ -19,7 +19,7 @@ EXTRA_QMAKEVARS_PRE += "QMAKE_CFLAGS+=-I${STAGING_INCDIR}/libblight"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
-EXTRA_QMAKEVARS_PRE += "CONFIG+=no_qml_types"  # Disable qml type registration due to qmltyperegistrar issue
+EXTRA_QMAKEVARS_PRE += "CONFIG+=no_qml_types"
 
 do_compile:prepend() {
     # Workaround for qmltyperegistrar not being in the correct location in NXP BSP
