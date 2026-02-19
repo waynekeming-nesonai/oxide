@@ -75,14 +75,8 @@ int main(int argc, char* argv[]){
     // qputenv("QT_QPA_PLATFORM", "vnc:size=1404x1872");
 #else
     // For non-EPAPER builds (QEMU/i.MX6), use standard Qt platforms
-    // Use linuxfb for framebuffer output or eglfs for GPU acceleration
-    if(qEnvironmentVariableIsSet("QEMU")) {
-        // QEMU builds - use software rendering
-        qputenv("QT_QPA_PLATFORM", "linuxfb");
-    } else {
-        // Hardware builds with GPU
-        qputenv("QT_QPA_PLATFORM", "eglfs");
-    }
+    // Default to linuxfb for framebuffer output (works on QEMU and i.MX6)
+    qputenv("QT_QPA_PLATFORM", "linuxfb");
 #endif
     QGuiApplication app(argc, argv);
     sentry_init("blight", argv);
