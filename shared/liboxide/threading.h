@@ -17,6 +17,11 @@ namespace Oxide {
      * \param priority Priority to start with
      */
     LIBOXIDE_EXPORT void startThreadWithPriority(QThread* thread, QThread::Priority priority);
+
+    // Forward declarations
+    LIBOXIDE_EXPORT void dispatchToThread(QThread* thread, std::function<void()> callback);
+    template<typename T> T dispatchToThread(QThread* thread, std::function<T()> callback);
+
     /*!
      * \brief Run code on the main Qt thread
      * \param callback The code to run on the main thread
@@ -36,16 +41,25 @@ namespace Oxide {
      * \brief Run code on a specific thread
      * \param thread The thread to run the callback in
      * \param callback The code to run on the thread
-     */
-    LIBOXIDE_EXPORT void dispatchToThread(QThread* thread, std::function<void()> callback);
-    /*!
-     * \brief Run code on a specific thread
-     * \param thread The thread to run the callback in
-     * \param callback The code to run on the thread
      * \return Return value of callback
      */
     // Inline template definition - must be here for dispatchToMainThread to work
     template<typename T> inline T dispatchToThread(
+        QThread* thread,
+        std::function<T()> callback
+    ){
+        T result;
+        dispatchToThread(thread, [callback, &result]{
+            result = callback();
+        });
+        return result;
+    }
+    /*!
+     * \brief Run code on a specific thread at some point in the near future
+     * \param thread The thread to run the callback in
+     * \param callback The code to run on the thread
+     */
+    LIBOXIDE_EXPORT void runLater(QThread* thread, std::function<void()> callback);
         QThread* thread,
         std::function<T()> callback
     ){
