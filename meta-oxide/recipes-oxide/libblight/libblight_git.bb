@@ -11,13 +11,11 @@ S = "${WORKDIR}/git/shared/libblight"
 DEPENDS = "qtbase libblight-protocol"
 PV = "1.0+git${SRCPV}"
 
-inherit qt6-qmake systemd
+inherit qt6-qmake
 
 EXTRA_QMAKEVARS_PRE += "CONFIG+=qt PREFIX=/usr"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
-
-SYSTEMD_SERVICE:${PN} = "blight.service"
 
 do_install:append() {
     # Install headers that qmake extra targets might miss
@@ -32,5 +30,5 @@ do_install:append() {
     echo '#include "libblight/libblight.h"' >> ${D}${includedir}/libblight.h
 }
 
-FILES:${PN} = "${bindir}/blight ${libdir}/lib*.so*"
+FILES:${PN} = "${libdir}/lib*.so*"
 FILES:${PN}-dev = "${includedir}/* ${libdir}/pkgconfig"
