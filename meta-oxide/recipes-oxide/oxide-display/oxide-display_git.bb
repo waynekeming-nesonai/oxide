@@ -19,6 +19,9 @@ EXTRA_QMAKEVARS_PRE += "CONFIG+=qt FEATURES=-sentry PREFIX=/usr"
 
 SYSTEMD_SERVICE:${PN} = "blight.service"
 
+# blight-client is a bash script
+RDEPENDS:${PN} += "bash"
+
 do_install:append() {
     # QEMU environment configuration
     install -d ${D}${sysconfdir}/default
