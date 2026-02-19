@@ -27,6 +27,15 @@ do_install:append() {
         mv ${D}/opt/* ${D}${prefix}/ || true
         rmdir ${D}/opt || true
     fi
+
+    # Manually install headers from build directory
+    if [ -d ${B}/include/liboxide ]; then
+        install -d ${D}${includedir}/liboxide
+        install -m 0644 ${B}/include/liboxide/*.h ${D}${includedir}/liboxide/
+    fi
+    if [ -f ${B}/include/liboxide.h ]; then
+        install -m 0644 ${B}/include/liboxide.h ${D}${includedir}/
+    fi
 }
 
 FILES:${PN} = "${libdir}/lib*.so* ${bindir}/* ${datadir}/oxide*"
