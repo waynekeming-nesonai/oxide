@@ -6,5 +6,6 @@ contains(DEFINES, LIBBLIGHT_PROTOCOL_PRIVATE){
 INCLUDEPATH += $$OUT_PWD/../../shared/libblight_protocol/include
 
 linux-oe-g++{
-    DEFINES += EPAPER
+    # EPAPER is reMarkable-specific, disabled for i.MX6 builds
+    # DEFINES += EPAPER
 }
