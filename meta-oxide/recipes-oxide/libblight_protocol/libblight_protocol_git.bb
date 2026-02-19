@@ -8,6 +8,9 @@ SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git/shared/libblight_protocol"
 
+# Explicitly set PN because bitbake can't handle multiple underscores correctly
+PN = "libblight-protocol"
+
 DEPENDS = "qtbase qtbase-native"
 PV = "1.0+git${SRCPV}"
 
