@@ -20,8 +20,8 @@ EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 do_install() {
     # Manual install since qmake install doesn't work correctly with bitbake
     install -d ${D}${libdir}
-    if [ -f ${B}/lib/libblight.so* ]; then
-        cp -a ${B}/lib/libblight.so* ${D}${libdir}/ || true
+    if [ -f ${B}/libblight.so* ]; then
+        cp -a ${B}/libblight.so* ${D}${libdir}/ || true
     fi
     # Install headers
     install -d ${D}${includedir}/libblight
