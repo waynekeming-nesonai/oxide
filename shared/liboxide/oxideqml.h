@@ -174,7 +174,7 @@ namespace Oxide {
             void penWidthChanged(qreal pendWidth);
 
         protected:
-            void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry) override;
+            void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry);
             void mousePressEvent(QMouseEvent *event) override;
             void mouseMoveEvent(QMouseEvent *event) override;
             void mouseReleaseEvent(QMouseEvent *event) override;
