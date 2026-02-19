@@ -41,7 +41,7 @@ namespace Oxide {
         if(!initialized){
             auto res = setup_unix_signal_handlers();
             if(res){
-                qFatal(QString("Failed to setup signal handlers: %1").arg(res).toStdString().c_str());
+                qFatal("Failed to setup signal handlers: %s", std::to_string(res).c_str());
             }
         }
         return instance;
