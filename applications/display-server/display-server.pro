@@ -52,6 +52,13 @@ INSTALLS += client
 TARGET = blight
 include(../../qmake/common.pri)
 target.path = /opt/bin
+linux-oe-g++{
+    # Use standard FHS paths for Yocto builds
+    target.path = /usr/bin
+    client.path = /usr/bin
+    configFile.path = ${PREFIX}/etc/dbus-1/system.d/
+    service.path = ${PREFIX}/etc/systemd/system/
+}
 INSTALLS += target
 
 HEADERS += \
