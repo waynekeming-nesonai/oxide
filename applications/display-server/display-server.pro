@@ -6,8 +6,16 @@ QT += input_support-private
 CONFIG += c++17
 CONFIG -= app_bundle
 CONFIG += qml_debug
-CONFIG += qtquickcompiler
-CONFIG += qmltypes
+linux-oe-g++{
+    # qtquickcompiler requires qmlcachegen which may not be available in Yocto builds
+    # CONFIG += qtquickcompiler
+    # qmltypes also disabled for Yocto builds
+    # CONFIG += qmltypes
+}
+!linux-oe-g++{
+    CONFIG += qtquickcompiler
+    CONFIG += qmltypes
+}
 
 QT_CONFIG -= no-pkg-config
 CONFIG += link_pkgconfig
