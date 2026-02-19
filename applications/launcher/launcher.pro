@@ -22,7 +22,15 @@ RESOURCES += qml.qrc
 
 TARGET = oxide
 include(../../qmake/common.pri)
+
 target.path = /opt/bin
+applications.files = ../../assets/opt/usr/share/applications/codes.eeems.oxide.oxide
+applications.path = /opt/usr/share/applications/
+icons.files = ../../assets/opt/usr/share/icons/oxide/702x702/splash/oxide.png
+icons.path  = /opt/usr/share/icons/oxide/702x702/splash/
+configFile.files = ../../assets/etc/oxide.conf
+configFile.path  = /opt/etc/
+
 linux-oe-g++{
     # Use standard FHS paths for Yocto builds
     target.path = /usr/bin
@@ -30,18 +38,10 @@ linux-oe-g++{
     icons.path = /usr/share/icons/oxide/702x702/splash/
     configFile.path = /etc/
 }
+
 INSTALLS += target
-
-applications.files = ../../assets/opt/usr/share/applications/codes.eeems.oxide.oxide
-applications.path = /opt/usr/share/applications/
 INSTALLS += applications
-
-icons.files = ../../assets/opt/usr/share/icons/oxide/702x702/splash/oxide.png
-icons.path  = /opt/usr/share/icons/oxide/702x702/splash/
 INSTALLS += icons
-
-configFile.files = ../../assets/etc/oxide.conf
-configFile.path  = /opt/etc/
 INSTALLS += configFile
 
 DISTFILES += \
