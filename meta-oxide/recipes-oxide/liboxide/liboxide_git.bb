@@ -33,7 +33,7 @@ do_compile() {
             fi
         done
     fi
-    qt6_qmake_compile
+    oe_runmake
 }
 
 FILES:${PN} = "${libdir}/lib*.so* ${bindir}/* ${datadir}/oxide*"
