@@ -22,7 +22,7 @@ SYSTEMD_SERVICE:${PN} = "blight.service"
 do_install:append() {
     # QEMU environment configuration
     install -d ${D}${sysconfdir}/default
-    install -m 0644 ${WORKDIR}/qemu-env.conf ${D}${sysconfdir}/default/oxide
+    install -m 0644 ${UNPACKDIR}/qemu-env.conf ${D}${sysconfdir}/default/oxide
 }
 
 FILES:${PN} = "${bindir}/blight ${bindir}/blight-client ${systemd_system_unitdir}/blight.service ${sysconfdir}/dbus-1/system.d/codes.eeems.blight.conf ${sysconfdir}/default/oxide"
