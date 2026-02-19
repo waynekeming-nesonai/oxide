@@ -20,7 +20,7 @@ namespace Oxide{
                 QByteArray slotName = method.name().prepend("on").append("(");
                 QStringList parameters;
                 for(int i = 0, j = method.parameterCount(); i < j; ++i){
-                    parameters << QMetaType::typeName(method.parameterType(i));
+                    parameters << QMetaType(method.parameterType(i)).name();
                 }
                 slotName.append(parameters.join(",").toUtf8()).append(")");
                 QByteArray theSignal = QMetaObject::normalizedSignature(method.methodSignature().constData());
@@ -80,8 +80,7 @@ namespace Oxide{
         Q_UNUSED(api);
         QVariantList args;
         for(int i = 0; i < parameters.length(); i++){
-            auto typeId = QMetaType::type(parameters[i].toStdString().c_str());
-            QMetaType type(typeId);
+            auto typeId = QMetaType::fromName(parameters[i].toStdString().c_str()).id();
             void* ptr = reinterpret_cast<void*>(arguments[i + 1]);
             args << QVariant(typeId, ptr);
         }
