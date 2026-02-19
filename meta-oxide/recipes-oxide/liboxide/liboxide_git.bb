@@ -20,21 +20,5 @@ EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 
-do_compile() {
-    # Workaround for qmltyperegistrar not being in the correct location in NXP BSP
-    mkdir -p ${RECIPE_SYSROOT_NATIVE}/usr/libexec
-    if [ ! -f ${RECIPE_SYSROOT_NATIVE}/usr/libexec/qmltyperegistrar ]; then
-        # Find and copy qmltyperegistrar from sysroot-destdir
-        for dir in ${TMPDIR}/work/*/qtdeclarative-native/*/sysroot-destdir/*/usr/libexec; do
-            if [ -f "$dir/qmltyperegistrar" ]; then
-                cp "$dir/qmltyperegistrar" ${RECIPE_SYSROOT_NATIVE}/usr/libexec/qmltyperegistrar || true
-                chmod +x ${RECIPE_SYSROOT_NATIVE}/usr/libexec/qmltyperegistrar || true
-                break
-            fi
-        done
-    fi
-    oe_runmake
-}
-
 FILES:${PN} = "${libdir}/lib*.so* ${bindir}/* ${datadir}/oxide*"
 FILES:${PN}-dev = "${includedir}/liboxide* ${libdir}/lib*.so ${libdir}/pkgconfig"
