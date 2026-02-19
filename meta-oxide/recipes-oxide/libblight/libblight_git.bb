@@ -28,7 +28,7 @@ do_install() {
     done
     # Install headers
     install -d ${D}${includedir}/libblight
-    for header in clock.h connection.h dbus.h debug.h libblight_global.h libblight.h meta.h socket.h types.h; do
+    for header in clock.h connection.h concurrentqueue.h dbus.h debug.h libblight_global.h libblight.h meta.h socket.h types.h; do
         if [ -f ${S}/$header ]; then
             install -m 0644 ${S}/$header ${D}${includedir}/libblight/ || true
         fi
@@ -51,7 +51,7 @@ do_install:append() {
     fi
     # Install headers that qmake extra targets might miss
     install -d ${D}${includedir}/libblight
-    for header in clock.h connection.h dbus.h debug.h libblight_global.h libblight.h meta.h socket.h types.h; do
+    for header in clock.h connection.h concurrentqueue.h dbus.h debug.h libblight_global.h libblight.h meta.h socket.h types.h; do
         if [ -f ${S}/$header ]; then
             install -m 0644 ${S}/$header ${D}${includedir}/libblight/ || true
         fi
