@@ -4,7 +4,13 @@ QT += dbus
 
 CONFIG += c++11
 CONFIG += qml_debug
-CONFIG += qtquickcompiler
+linux-oe-g++{
+    # qtquickcompiler requires qmlcachegen which may not be available in Yocto builds
+    # CONFIG += qtquickcompiler
+}
+!linux-oe-g++{
+    CONFIG += qtquickcompiler
+}
 CONFIG += precompile_header
 
 SOURCES += \

@@ -5,7 +5,6 @@
 
 #include <private/qdevicediscovery_p.h>
 #include <private/qguiapplication_p.h>
-#include <private/qmemory_p.h>
 
 OxideEventManager::OxideEventManager(const QStringList& parameters)
 : QObject(),

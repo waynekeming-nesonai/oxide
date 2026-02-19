@@ -9,6 +9,12 @@
 #include <liboxide/devicesettings.h>
 #include <private/qevdevtouchfilter_p.h>
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <qpointingdevice.h>
+#else
+#include <QTouchDevice>
+#endif
+
 typedef struct KeyboardData {
     quint16 m_modifiers;
     quint8 m_locks[3];
@@ -51,6 +57,27 @@ typedef struct Contact {
     QTouchEvent::TouchPoint::InfoFlags flags;
 } Contact;
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+typedef struct TouchData {
+    int lastEventType;
+    Contact currentData;
+    int currentSlot;
+    double timeStamp;
+    double lastTimeStamp;
+    int minX;
+    int maxX;
+    int minY;
+    int maxY;
+    int minPressure;
+    int maxPressure;
+    bool isTypeB;
+    bool singleTouch;
+    QList<QWindowSystemInterface::TouchPoint> touchPoints;
+    QList<QWindowSystemInterface::TouchPoint> lastTouchPoints;
+    QHash<int, Contact> contacts;
+    QHash<int, Contact> lastContacts;
+    QPointingDevice* device = nullptr;
+#else
 typedef struct TouchData {
     int lastEventType;
     Contact currentData;
@@ -70,6 +97,7 @@ typedef struct TouchData {
     QHash<int, Contact> contacts;
     QHash<int, Contact> lastContacts;
     QTouchDevice* device = nullptr;
+#endif
     TouchData()
     : lastEventType{-1},
       currentSlot{0},
@@ -170,6 +198,18 @@ DeviceData::DeviceData(unsigned int device, QInputDeviceManager::DeviceType type
                 touchData->minPressure = absInfo.minimum;
                 touchData->maxPressure = absInfo.maximum;
             }
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            auto touchDevice = new QPointingDevice;
+            touchDevice->setName(hw_name);
+            touchDevice->setType(QPointingDevice::PointerType::TouchScreen);
+            touchDevice->setCapabilities(QPointingDevice::Capability::Position | QPointingDevice::Capability::Area);
+            if(touchData->maxPressure > touchData->minPressure){
+                touchDevice->setCapabilities(touchDevice->capabilities() | QPointingDevice::Capability::Pressure);
+            }
+            if(ioctl(fd, EVIOCGABS(ABS_MT_SLOT), &absInfo)){
+                touchDevice->setMaximumTouchPoints(absInfo.maximum);
+            }
+#else
             auto touchDevice = new QTouchDevice;
             touchDevice->setName(hw_name);
             touchDevice->setType(QTouchDevice::TouchScreen);
@@ -180,6 +220,7 @@ DeviceData::DeviceData(unsigned int device, QInputDeviceManager::DeviceType type
             if(ioctl(fd, EVIOCGABS(ABS_MT_SLOT), &absInfo)){
                 touchDevice->setMaximumTouchPoints(absInfo.maximum);
             }
+#endif
             touchData->device = touchDevice;
             QWindowSystemInterface::registerTouchDevice(touchDevice);
             break;
