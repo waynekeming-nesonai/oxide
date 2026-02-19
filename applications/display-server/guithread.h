@@ -69,4 +69,56 @@ private:
     void redraw(RepaintRequest& event);
     QList<std::shared_ptr<Surface>> visibleSurfaces();
 };
+#else
+#include <QThread>
+#include <QObject>
+#include "surface.h"
+
+// Stub implementation for non-EPAPER builds
+class GUIThreadStub : public QObject {
+    Q_OBJECT
+
+public:
+    static GUIThreadStub* instance() {
+        static GUIThreadStub inst;
+        return &inst;
+    }
+
+    void enqueue(
+        std::shared_ptr<Surface> surface,
+        QRect region,
+        Blight::WaveformMode waveform,
+        Blight::UpdateMode mode,
+        unsigned int marker,
+        bool global = false,
+        std::function<void()> callback = nullptr
+    ) {
+        // Stub - do nothing for non-EPAPER builds
+        if (callback) {
+            callback();
+        }
+    }
+
+    void notify() {
+        // Stub - do nothing
+    }
+
+    int framebuffer() {
+        return -1;
+    }
+
+    void sendUpdate(
+        const QRect& rect,
+        Blight::WaveformMode waveform,
+        Blight::UpdateMode mode,
+        unsigned int marker
+    ) {
+        // Stub - do nothing
+    }
+
+signals:
+    void settled();
+};
+
+#define guiThread GUIThreadStub::instance()
 #endif
