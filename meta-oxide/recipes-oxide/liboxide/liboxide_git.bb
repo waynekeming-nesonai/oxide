@@ -24,10 +24,11 @@ do_configure:prepend() {
     # Workaround for qmltyperegistrar not being in the correct location in NXP BSP
     mkdir -p ${RECIPE_SYSROOT_NATIVE}/usr/libexec
     if [ ! -f ${RECIPE_SYSROOT_NATIVE}/usr/libexec/qmltyperegistrar ]; then
-        # Find and symlink qmltyperegistrar from sysroot-destdir
+        # Find and copy qmltyperegistrar from sysroot-destdir
         for dir in ${TMPDIR}/work/*/qtdeclarative-native/*/sysroot-destdir/*/usr/libexec; do
             if [ -f "$dir/qmltyperegistrar" ]; then
-                ln -sf "$dir/qmltyperegistrar" ${RECIPE_SYSROOT_NATIVE}/usr/libexec/qmltyperegistrar || true
+                cp "$dir/qmltyperegistrar" ${RECIPE_SYSROOT_NATIVE}/usr/libexec/qmltyperegistrar || true
+                chmod +x ${RECIPE_SYSROOT_NATIVE}/usr/libexec/qmltyperegistrar || true
                 break
             fi
         done
