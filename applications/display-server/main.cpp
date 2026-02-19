@@ -74,9 +74,9 @@ int main(int argc, char* argv[]){
     qputenv("QT_QPA_PLATFORM", "offscreen");
 #else
     // For non-EPAPER builds (QEMU/i.MX6):
-    // - QEMU: Use VNC platform for remote display at reMarkable resolution
+    // - QEMU: Use VNC platform on port 5901 (QEMU uses 5900) at reMarkable resolution
     // - i.MX6 hardware: Would use eglfs/linuxfb for GPU/framebuffer
-    qputenv("QT_QPA_PLATFORM", "vnc:size=1404x1872");
+    qputenv("QT_QPA_PLATFORM", "vnc:size=1404x1872:port=5901");
 #endif
     QGuiApplication app(argc, argv);
     sentry_init("blight", argv);
