@@ -20,5 +20,14 @@ EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 EXTRA_QMAKEVARS_PRE += "QMAKE_CXXFLAGS+=-I${STAGING_INCDIR}/libblight_protocol"
 
+do_install:append() {
+    # Move files from /opt to /usr if installed there
+    if [ -d ${D}/opt ]; then
+        mkdir -p ${D}${prefix}
+        mv ${D}/opt/* ${D}${prefix}/ || true
+        rmdir ${D}/opt || true
+    fi
+}
+
 FILES:${PN} = "${libdir}/lib*.so* ${bindir}/* ${datadir}/oxide*"
 FILES:${PN}-dev = "${includedir}/liboxide* ${libdir}/lib*.so ${libdir}/pkgconfig"
