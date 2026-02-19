@@ -13,7 +13,7 @@ CONFIG += precompile_header
 CONFIG += create_pc
 CONFIG += create_prl
 CONFIG += no_install_prl
-CONFIG += qmltypes
+# CONFIG += qmltypes  # Disabled due to qmltyperegistrar issue with NXP BSP
 
 QML_IMPORT_NAME = codes.eeems.oxide
 QML_IMPORT_MAJOR_VERSION = 2
