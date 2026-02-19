@@ -15,4 +15,4 @@ inherit qt6-qmake
 
 EXTRA_QMAKEVARS_PRE += "PREFIX=/usr"
 
-FILES:${PN} = "${bindir}/oxide ${datadir}/oxide*"
+FILES:${PN} = "${bindir}/oxide ${sysconfdir}/oxide.conf ${datadir}/applications/* ${datadir}/icons/*"
