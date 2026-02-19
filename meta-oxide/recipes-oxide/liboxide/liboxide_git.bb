@@ -11,20 +11,10 @@ S = "${WORKDIR}/git/shared/liboxide"
 DEPENDS = "qtbase qtdeclarative libblight systemd"
 PV = "1.0+git${SRCPV}"
 
-inherit qt6-qmake
+inherit qmake5
 
 # Disable sentry for Yocto builds
 EXTRA_QMAKEVARS_PRE += "CONFIG+=qt FEATURES=-sentry PREFIX=/usr"
-
-do_configure:append() {
-    # Create symlinks to libblight headers so qmake can find them
-    mkdir -p ${B}/../../shared/libblight/include
-    for header in clock.h connection.h dbus.h debug.h libblight_global.h libblight.h meta.h socket.h types.h; do
-        if [ -f ${WORKDIR}/git/shared/libblight/$header ]; then
-            ln -sf ${WORKDIR}/git/shared/libblight/$header ${B}/../../shared/libblight/include/$header || true
-        fi
-    done
-}
 
 FILES:${PN} = "${libdir}/lib*.so* ${bindir}/* ${datadir}/oxide*"
 FILES:${PN}-dev = "${includedir}/liboxide* ${libdir}/lib*.so ${libdir}/pkgconfig"
