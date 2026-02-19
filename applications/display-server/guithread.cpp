@@ -277,6 +277,14 @@ void GUIThread::redraw(RepaintRequest& event){
 
 void GUIThread::sendUpdate(const QRect& rect, Blight::WaveformMode waveform, Blight::UpdateMode mode, unsigned int marker){
     O_DEBUG("Sending screen update" << rect << waveform << mode);
+
+    if (qEnvironmentVariableIsSet("QEMU")) {
+        // QEMU mode: skip MXCFB ioctl, just return
+        // The framebuffer is already updated by QPainter
+        O_DEBUG("QEMU mode: skipping MXCFB SEND_UPDATE");
+        return;
+    }
+
     mxcfb_update_data data{
         .update_region = mxcfb_rect{
             .top = (unsigned int)rect.top(),

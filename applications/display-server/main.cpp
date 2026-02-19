@@ -48,17 +48,20 @@ bool stopProcess(pid_t pid){
 
 int main(int argc, char* argv[]){
 #ifdef __arm__
-    if(deviceSettings.getDeviceType() == Oxide::DeviceSettings::RM2){
-        // TODO - also detect if rm2fb-server is running and start it if it isn't
-        if(getenv("RM2FB_ACTIVE") == nullptr){
-            bool enabled = Oxide::debugEnabled();
-            if(!enabled){
-                qputenv("DEBUG", "1");
+    // Skip RM2FB check if in QEMU mode
+    if(!qEnvironmentVariableIsSet("QEMU")) {
+        if(deviceSettings.getDeviceType() == Oxide::DeviceSettings::RM2){
+            // TODO - also detect if rm2fb-server is running and start it if it isn't
+            if(getenv("RM2FB_ACTIVE") == nullptr){
+                bool enabled = Oxide::debugEnabled();
+                if(!enabled){
+                    qputenv("DEBUG", "1");
+                }
+                O_WARNING("rm2fb not detected. Running xochitl instead!");
+                execl("/usr/bin/xochitl", "/usr/bin/xochitl", NULL);
+                O_WARNING("Failed to run xochitl: " << std::strerror(errno));
+                return errno;
             }
-            O_WARNING("rm2fb not detected. Running xochitl instead!");
-            execl("/usr/bin/xochitl", "/usr/bin/xochitl", NULL);
-            O_WARNING("Failed to run xochitl: " << std::strerror(errno));
-            return errno;
         }
     }
 #endif

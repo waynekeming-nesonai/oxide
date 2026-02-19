@@ -36,10 +36,7 @@ namespace Oxide{
     }
 
     void dispatchToMainThread(std::function<void()> callback){
-        dispatchToMainThread<int>([callback]{
-            callback();
-            return 0;
-        });
+        dispatchToThread(qApp->thread(), callback);
     }
 
     void dispatchToThread(QThread* thread, std::function<void()> callback){

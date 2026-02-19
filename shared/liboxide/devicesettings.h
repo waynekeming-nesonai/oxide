@@ -26,7 +26,8 @@ namespace Oxide{
         enum DeviceType {
             Unknown, /*!< Unknown device type >*/
             RM1, /*!< reMarkable 1 >*/
-            RM2 /*!< reMarkable 2 >*/
+            RM2, /*!< reMarkable 2 >*/
+            QEMU /*!< QEMU ARM (i.MX6) >*/
         };
         /*!
          * \brief Get the static instance of this class. You should use the deviceSettings macro instead.

@@ -40,12 +40,18 @@ int compare(const QVariant* v1, const QVariant* v2){
         return 1;
     }
     if ((int)v1->typeId() >= (int)QMetaType::User) {
-        int result;
         const void* v1d = v1->constData();
         const void* v2d = v2->constData();
         QMetaType metaType(v1->typeId());
-        if(metaType.compare(v1d, v2d, &result)){
-            return result;
+        auto ordering = metaType.compare(v1d, v2d);
+        if(ordering == QPartialOrdering::Less){
+            return -1;
+        }
+        if(ordering == QPartialOrdering::Greater){
+            return 1;
+        }
+        if(ordering == QPartialOrdering::Equivalent){
+            return 0;
         }
     }
     switch (v1->typeId()){

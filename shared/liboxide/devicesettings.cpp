@@ -90,6 +90,13 @@ namespace Oxide {
     }
 
     void DeviceSettings::readDeviceType() {
+        // Check for QEMU environment variable first
+        if(qEnvironmentVariableIsSet("QEMU")) {
+            O_DEBUG("QEMU environment detected...");
+            _deviceType = DeviceType::QEMU;
+            return;
+        }
+
         QFile file("/sys/devices/soc0/machine");
         if(!file.exists() || !file.open(QIODevice::ReadOnly | QIODevice::Text)){
             O_DEBUG("Couldn't open " << file.fileName());
@@ -120,6 +127,8 @@ namespace Oxide {
                 return "reMarkable 1";
             case DeviceType::RM2:
                 return "reMarkable 2";
+            case DeviceType::QEMU:
+                return "QEMU ARM (i.MX6)";
             default:
                 return "Unknown";
         }
@@ -131,6 +140,8 @@ namespace Oxide {
                 return "rotate=180";
             case DeviceType::RM2:
                 return "rotate=180:invertx";
+            case DeviceType::QEMU:
+                return "";  // No rotation for QEMU
             default:
                 return "";
         }
@@ -142,6 +153,8 @@ namespace Oxide {
                 return 767;
             case DeviceType::RM2:
                 return 1403;
+            case DeviceType::QEMU:
+                return 1024;  // QEMU default
             default:
                 return 0;
         }
@@ -152,6 +165,8 @@ namespace Oxide {
                 return 1023;
             case DeviceType::RM2:
                 return 1871;
+            case DeviceType::QEMU:
+                return 768;  // QEMU default
             default:
                 return 0;
         }
