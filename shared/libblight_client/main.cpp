@@ -1084,7 +1084,8 @@ extern "C" {
         if(getenv("OXIDE_PRELOAD_FORCE_QT") != nullptr){
             setenv("QMLSCENE_DEVICE", "software", 1);
             setenv("QT_QUICK_BACKEND", "software", 1);
-            setenv("QT_QPA_PLATFORM", "oxide:enable_fonts", 1);
+            // Use linuxfb for QEMU/i.MX6 builds (instead of oxide platform)
+            setenv("QT_QPA_PLATFORM", "linuxfb", 1);
             setenv("QT_QPA_EVDEV_TOUCHSCREEN_PARAMETERS", "", 1);
             setenv("QT_QPA_EVDEV_MOUSE_PARAMETERS", "", 1);
             setenv("QT_QPA_EVDEV_KEYBOARD_PARAMETERS", "", 1);
